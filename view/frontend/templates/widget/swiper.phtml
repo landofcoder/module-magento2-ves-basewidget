@@ -1,0 +1,60 @@
+<?php
+    $id = "ves_widgets_swiper_".rand().time();
+    $title = $this->getConfig("title", "");
+    $freemode = $this->getConfig("freemode");
+    $loop = $this->getConfig("loop");
+    $stylecls = $this->getConfig("stylecls");
+    $slider_height = (int)$this->getConfig("slider_height",0);
+?>
+<?php if($items = $this->getDataItems() ): ?>
+<div id="<?php echo $id; ?>" class="ves-widget widget-swiper block <?php echo $this->getConfig("addition_cls"); ?> <?php if (isset($stylecls)&&$stylecls) echo 'block-'.$stylecls;?>">
+    <?php if( $title != '' && !$title){ ?>
+    <div class="block-title">
+        <h3><span><?php echo $title; ?></span></h3>
+    </div>
+    <?php } ?>
+    <div class="widget-inner block-content">
+<!-- Swiper -->
+    <div class="swiper-container slider banners masterslider" <?php echo $slider_height?' style="height:'.$slider_height.'px;"':'';?>>
+        <div class="swiper-wrapper">
+            <?php foreach($items as $item): ?>
+                <div class="swiper-slide <?php echo ($item['size'])?'swiper-slide-'.$item['size']:''; ?>" <?php echo $slider_height?' style="height:'.$slider_height.'px;"':'';?>><div class="slide-inner"><?php echo $item['content']; ?></div></div>
+            <?php endforeach; ?>
+        </div>
+        <?php if($this->getConfig("show_pagination")): ?>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <?php endif; ?>
+        <?php if($this->getConfig("show_navigator")): ?>
+         <!-- If we need navigation buttons -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+        <?php endif; ?>
+        <?php if($this->getConfig("show_scrollbar")): ?>
+        <!-- If we need scrollbar -->
+        <div class="swiper-scrollbar"></div>
+        <?php endif; ?>
+    </div>
+<!-- Initialize Swiper -->
+    </div>
+</div>
+<script type="text/javascript">
+require([
+        'jquery',
+        'Ves_BaseWidget/js/swiper/swiper.min'
+        ],function($, Swiper){
+            if($("#<?php echo $id; ?>").length > 0) {
+                var swiper = new Swiper('#<?php echo $id; ?> .swiper-container', {
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    });
+            }
+        });
+</script>
+<?php endif; ?>

@@ -1,0 +1,215 @@
+<?php
+$helper         = $this->helper('Ves\BaseWidget\Helper\Data');
+$pageBuilderHelper         = $this->helper('Ves\PageBuilder\Helper\Data');
+$isBootstrap24 = $pageBuilderHelper->getConfig("general/enable_bootstrap24");
+$full_width_column = $isBootstrap24?24:12;
+$bootstrapValue = $isBootstrap24?2:1;
+$addition_cls = $this->getConfig('addition_cls');
+$box_title = $this->getConfig('box_title');
+$box_layout_style = $this->getConfig('box_layout_style');
+$column1_class = "col-".($bootstrapValue*6)." col-sm-".($bootstrapValue*6);
+$column2_class = "col-".($bootstrapValue*6)." col-sm-".($bootstrapValue*6);
+$box_layout_style_arr = explode("-",$box_layout_style);
+if($box_layout_style_arr && count($box_layout_style_arr) >= 2){
+    $column1_class = "col-".((int)$box_layout_style_arr[0]*$bootstrapValue)." col-sm-".((int)$box_layout_style_arr[0]*2);
+    $column1_class = "col-".((int)$box_layout_style_arr[1]*$bootstrapValue)." col-sm-".((int)$box_layout_style_arr[1]*2);
+}
+
+$hide_section_text = $this->getConfig('hide_section_text');
+$hide_section_text = $hide_section_text?(int)$hide_section_text:0;
+
+$heading_text = $this->getConfig('heading_text');
+$sub_heading_text = $this->getConfig('content_2');
+if($helper->isBase64Encoded($sub_heading_text)){
+   $sub_heading_text = @str_replace(" ","+",$sub_heading_text);
+   $sub_heading_text = base64_decode($sub_heading_text);
+   $sub_heading_text = $this->getDataFilterHelper()->filter($sub_heading_text);
+}
+
+$box_text = $this->getConfig('content');
+if($helper->isBase64Encoded($box_text)){
+   $box_text = @str_replace(" ","+",$box_text);
+   $box_text = base64_decode($box_text);
+   $box_text = $this->getDataFilterHelper()->filter($box_text);
+}
+
+$sub_box_text = $this->getConfig('content_1');
+if($helper->isBase64Encoded($sub_box_text)){
+   $sub_box_text = @str_replace(" ","+",$sub_box_text);
+   $sub_box_text = base64_decode($sub_box_text);
+   $sub_box_text = $this->getDataFilterHelper()->filter($sub_box_text);
+}
+$box_button_text = $this->getConfig('box_button_text');
+$box_button_link = $this->getConfig('box_button_link');
+$box_button_link           = @trim($box_button_link);
+if($box_button_link){
+    if($helper->isSiteLink($box_button_link)){
+        $box_button_link = $this->getUrl($box_button_link);
+    }
+}
+$box_title_link = $this->getConfig('box_title_link');
+$box_title_link           = @trim($box_title_link);
+if($box_title_link){
+    if($helper->isSiteLink($box_title_link)){
+        $box_title_link = $this->getUrl($box_title_link);
+    }
+}
+$button_icon = $this->getConfig('button_icon');
+$button_style = $this->getConfig('button_style');
+$button_size = $this->getConfig('button_size');
+$is_outline = $this->getConfig('is_outline');
+$is_active = $this->getConfig('is_active');
+$image_size = $this->getConfig('image_size');
+$image_alt = $this->getConfig('image_alt');
+$box_image_position = $this->getConfig('box_image_position');
+$box_image_link = $this->getConfig('box_image_link');
+$box_image_link           = @trim($box_image_link);
+if($box_image_link){
+    if($helper->isSiteLink($box_image_link)){
+        $box_image_link = $this->getUrl($box_image_link);
+    }
+}
+$box_image_bottom_text = $this->getConfig('box_image_bottom_text');
+$box_image_border_size = $this->getConfig('box_image_border_size');
+$box_image_border_color = $this->getConfig('box_image_border_color');
+$box_image_border_radius = $this->getConfig('box_image_border_radius');
+$image_style = "";
+if($box_image_border_size){
+    $image_style = 'border-width:'.$box_image_border_size.';border-style:solid;';
+}
+if($box_image_border_color){
+    $image_style .= 'border-color:'.$box_image_border_color.';';
+}
+if($box_image_border_radius){
+    $image_style .= 'border-radius:'.$box_image_border_radius.';';
+}
+$image_class = $this->getConfig('box_image_style');
+if($image_class == "default"){
+    $image_class = "img-responsive center-block";
+}
+$button_class 	= 'btn';
+if($button_size){
+    $button_class .=' btn-'.$button_size;
+}
+if($is_outline){
+    $button_class .= ' btn-outline-'.$button_style;
+}else {
+    $button_class .= ' btn-'.$button_style;
+}
+if($is_active){
+    $button_class .= ' active';
+}
+$thumbnailurl_small = (isset($thumbnailurl_small) && $thumbnailurl_small)?$thumbnailurl_small:$thumbnailurl;
+$thumbnailurl_larger = (isset($thumbnailurl_larger) && $thumbnailurl_larger)?$thumbnailurl_larger:$thumbnailurl;
+?>
+<?php
+if($heading_text): // If have heading text will display row heading text
+?>
+<div class="row element element-box-image-heading">
+    <div class="col-<?= $full_width_column;?>">
+        <div class="widget-raw-html block">
+            <div class="widget-inner block-content">
+                <h2 class="title block-title"><?php echo $heading_text ?></h2>
+                <?php if($sub_heading_text): ?>
+                <div class="widget-inner block-content">
+                <?php echo $sub_heading_text; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+endif;
+?>
+<div class="row element element-box-image <?= $addition_cls; ?>">
+    <?php if($hide_section_text): // if hide section text, then just show image box?>
+        <div class="col-<?= $full_width_column;?> col-sm-<?= $full_width_column;?> <?php echo $addition_cls; ?>">
+            <?php if($box_image_link): ?>
+                <a href="<?php echo $box_image_link;?>" class="ves-btnlink img-animation">
+            <?php endif; ?>
+                <img src="<?= $thumbnailurl;?>" class="<?= $image_class; ?>" style="<?=$image_style;?>" alt="<?= $image_alt; ?>"/>
+            <?php if($box_image_link): ?>
+                </a>
+            <?php endif; ?>
+            <?php if($box_image_bottom_text): ?>
+                <div class="bottom-text bottom-img-text"><?=$box_image_bottom_text;?></div>
+            <?php endif; ?>
+        </div>
+    <?php else: // else will display section text with image box together?>
+    <div class="<?= $column1_class;?>">
+        <?php if($box_image_position == "left"): // Image Show at left?>
+            <?php if($box_image_link): ?>
+                <a href="<?php echo $box_image_link;?>" class="ves-btnlink img-animation">
+            <?php endif; ?>
+                <img src="<?= $thumbnailurl;?>" class="<?= $image_class; ?>" style="<?=$image_style;?>" alt="<?= $image_alt; ?>"/>
+            <?php if($box_image_link): ?>
+                </a>
+            <?php endif; ?>
+            <?php if($box_image_bottom_text): ?>
+                <div class="bottom-text bottom-img-text"><?=$box_image_bottom_text;?></div>
+            <?php endif; ?>
+        <?php else: // Text show at left?>
+            <div class="block block-text-widget">
+                <?php if($box_title): ?>
+                    <h2 class="title text-heading"><?php if($box_title_link): ?><a href="<?=$box_title_link;?>"><?php endif; ?><?= $box_title; ?><?php if($box_title_link): ?></a><?php endif; ?></h2>
+                <?php endif; ?>
+                <?php if($box_text): ?>
+                <div class="block-content">
+                    <?= $box_text; ?>
+                    <?php if($sub_box_text): ?>
+                    <div class="widget-inner-sub-text">
+                        <?php echo $sub_box_text; ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if($box_button_text): ?>
+                        <?php if($box_button_link): ?>
+                            <a class="<?= $button_class; ?>" href="<?= $box_button_link; ?>" role="button" title="<?php echo $box_button_text;?>"><?php if($button_icon): ?><i class="<?php echo $button_icon; ?>"></i>&nbsp;<?php endif; ?><?= $box_button_text; ?></a>
+                        <?php else: ?>
+                            <button type="button" class="<?= $button_class; ?>" title="<?php echo $box_button_text;?>"><?php if($button_icon): ?><i class="<?php echo $button_icon; ?>"></i>&nbsp;<?php endif; ?><?= $box_button_text; ?></button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div class="<?= $column2_class;?>">
+        <?php if($box_image_position == "right"):  // Image show at right?>
+            <?php if($box_image_link): ?>
+                <a href="<?php echo $box_image_link;?>" class="ves-btnlink img-animation">
+            <?php endif; ?>
+                <img src="<?= $thumbnailurl;?>" class="<?= $image_class; ?>" style="<?=$image_style;?>" alt="<?= $image_alt; ?>"/>
+            <?php if($box_image_link): ?>
+                </a>
+            <?php endif; ?>
+            <?php if($box_image_bottom_text): ?>
+                <div class="bottom-text bottom-img-text"><?=$box_image_bottom_text;?></div>
+            <?php endif; ?>
+        <?php else:  // Text show at right?>
+            <div class="block block-text-widget">
+                <?php if($box_title): ?>
+                    <h2 class="title text-heading"><?php if($box_title_link): ?><a href="<?=$box_title_link;?>"><?php endif; ?><?= $box_title; ?><?php if($box_title_link): ?></a><?php endif; ?></h2>
+                <?php endif; ?>
+                <?php if($box_text): ?>
+                <div class="block-content">
+                    <?= $box_text; ?>
+                    <?php if($sub_box_text): ?>
+                    <div class="widget-inner-sub-text">
+                        <?php echo $sub_box_text; ?>
+                    </div>
+                    <?php endif; ?>
+                    <?php if($box_button_text): ?>
+                        <?php if($box_button_link): ?>
+                            <a class="<?= $button_class; ?>" href="<?= $box_button_link; ?>" role="button" title="<?php echo $box_button_text;?>"><?php if($button_icon): ?><i class="<?php echo $button_icon; ?>"></i>&nbsp;<?php endif; ?><?= $box_button_text; ?></a>
+                        <?php else: ?>
+                            <button type="button" class="<?= $button_class; ?>" title="<?php echo $box_button_text;?>"><?php if($button_icon): ?><i class="<?php echo $button_icon; ?>"></i>&nbsp;<?php endif; ?><?= $box_button_text; ?></button>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+</div>

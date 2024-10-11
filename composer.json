@@ -1,0 +1,31 @@
+{
+    "name": "landofcoder/module-ves-basewidget",
+    "description": "Extension For All Base Widgets Which Were Used In Blocks Builder",
+    "require": {
+        "landofcoder/module-ves-all": "1.0.*"
+    },
+    "type": "magento2-module",
+    "version": "0.1.2",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "keywords": [
+        "venustheme",
+        "venustheme module base widgets",
+        "magento 2 base widgets extension"
+    ],
+    "authors": [
+        {
+            "name": "landofcoder",
+            "email": "landofcoder@gmail.com",
+            "role": "Magento 2 Ves Base Widgets"
+        }
+    ],
+    "autoload": {
+        "files": [ "registration.php" ],
+        "psr-4": {
+          "Ves\\BaseWidget\\": ""
+        }
+    }
+}

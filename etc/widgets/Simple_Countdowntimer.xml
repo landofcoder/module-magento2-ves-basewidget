@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Venustheme
+ * 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Venustheme.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.venustheme.com/license-agreement.html
+ * 
+ * DISCLAIMER
+ * 
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ * 
+ * @category   Venustheme
+ * @package    Ves_Brand
+ * @copyright  Copyright (c) 2014 Venustheme (http://www.venustheme.com/)
+ * @license    http://www.venustheme.com/LICENSE-1.0.html
+ */
+-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="ves_basewidget_simplecountdowntimer" class="Ves\BaseWidget\Block\Widget\SimpleCountdowntimer">
+        <label translate="true">Ves Base: Simple Countdown Timer</label>
+        <description>Show countdown timer</description>
+        <parameters>
+            <parameter name="show_current_date" xsi:type="select"  visible="true" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label translate="true">Enable Countdown of Today</label>
+            </parameter>
+           
+            <parameter name="end_date" xsi:type="text"  visible="true">
+                <label translate="true">Expired Date:</label>
+                <description translate="true">Input date with format: M/d/yyyy for example: 09/30/2025.</description>
+                <depends>
+                    <parameter name="show_current_date" value="0" />
+                </depends>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

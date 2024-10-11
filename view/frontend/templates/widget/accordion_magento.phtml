@@ -1,0 +1,38 @@
+<?php
+$id = rand().time();
+$headingTag = $heading_type ? $heading_type : 'span';
+if (isset($accordions)): ?>
+<div class="ves-widget widget-accordion block <?= $addition_cls; ?> <?php if (isset($stylecls)&&$stylecls) echo 'block-'.$stylecls;?>">
+	<?php if (isset($widget_heading)&&!empty($widget_heading)): ?>
+	<div class="block-title">
+		<h2><span><?= $widget_heading; ?></span></h2>
+	</div>
+	<?php endif; ?>
+	<div class="widget-inner block-content">
+
+		<div id="accordionmg<?= $id; ?>" data-mage-init='{"accordion":{"openedState": "active", "collapsible": true, "multipleCollapsible":  <?= $multi?'true':'false'; ?>, active:"<?= $active; ?>", openOnFocus: <?= $open_on_focus?'true':'false'; ?>}}'>
+
+	 	<?php foreach ($accordions as $key => $ac): ?>
+	 		<div data-role="collapsible">
+				<div class="data item title" aria-labeledby="accordion-label-<?php  echo $id.$key;?>-title" data-role="title" id="accordion-label-<?= $id.$key;?>">
+			         <a class="data switch"
+                        tabindex="<?= $key; ?>"
+                        data-toggle="switch"
+                        href="#accordion-<?= $id.$key; ?>"
+                        id="accordion-label-<?= $id.$key;?>-title">
+                        <?= '<'.$headingTag. ' class="accordion-title">'; ?><?= $ac['header']; ?><?= '</'.$headingTag.'>'; ?>
+                    </a>
+			    </div>
+			     <div class="data item content" id="accordion-<?= $id.$key; ?>" data-role="content">
+                   <?= $ac['content']; ?>
+                </div>
+		    </div>
+	 	<?php endforeach; ?>
+		</div>
+	</div>
+</div>
+<?php endif; ?>
+
+
+
+

@@ -1,0 +1,181 @@
+<?php
+/*
+* Ves Base Widget - Feed Reader Sidebar
+*
+* @package   vesbase
+* @version   5.0
+* @author    http://www.venustheme.com
+* @copyright Copyright (C) October 2013 venustheme.com <@emai:venustheme@gmail.com>
+*               <info@venustheme.com>.All rights reserved.
+* @license   GNU General Public License version 2
+*/
+$modid = rand().time();
+$remainder = '';
+$enable_collapse = $this->getConfig("enable_collapse", 0);
+
+//Owl Carousel Settings
+$loop = $this->getConfig("loop", 0);
+$margin_item = $this->getConfig("margin_item", 0);
+$show_nav = $this->getConfig("show_navigator", 0);
+$dots = $this->getConfig("dots", 0);
+$auto_play_mode = $this->getConfig("auto_play", 0);
+$autoplay_timeout = $this->getConfig("autoplay_timeout", 0);
+$autoplay_hover = $this->getConfig("autoplay_hover", 1);
+$single_item = $this->getConfig("single_item", 0);
+$autoSpeed = $this->getConfig("autospeed", 1000);
+//End Owl Carousel Settings
+$max_chars = $this->getConfig("max_chars", 80);
+$is_truncate = $this->getConfig("is_truncate", 0);
+$strip_html = $this->getConfig("strip_html", 0);
+$show_image = $this->getConfig("show_image", 1);
+$widget_heading = $block->escapeHtml($this->getTitle());
+?>
+<?php if($this->getItemCount() > 0): ?>
+<div class="ves-widget block block-list block-feed-reader-widget">
+	<?php if (isset($widget_heading)&&!empty($widget_heading)): ?>
+	<div class="block-title">
+	 	<?php if($enable_collapse): ?><span class="opener hidden-lg hidden-md" data-toggle="collapse" data-target="#widget-feedreader-carousel<?php echo $modid; ?>"><i class="fa fa-angle-down"></i></span><?php endif; ?>
+		<strong><span><?php echo $widget_heading ; ?></span></strong>
+	</div>
+	<?php endif; ?>
+
+	<div id="widget-feedreader-carousel<?php echo $modid; ?>" class="widget-inner block-content <?php if($enable_collapse): ?> widget-enanle-collapse collapse in <?php endif; ?>">
+		<div id="feed-items-carousel-<?php echo $modid; ?>" class="owl-carousel">
+		<?php
+		$itemCount = 0;
+		foreach($this->getItems() as $item): ?>
+			<div class="item">
+				<div class="block-feed-item <?php echo (++$itemCount % 2 == 0 ? 'even' : 'odd'); ?><?php if($itemCount == 1): ?> first<?php endif;?><?php if($itemCount >= $this->getItemCount()): ?> last<?php endif; ?>">
+					<?php
+					$imageSrc = $item->getXpath()->evaluate(
+			            'string(' . $item->getXpathPrefix() . '/imageSrc)'
+			        );
+					?>
+					<?php if($imageSrc && $show_image){ ?>
+        
+					<div class="post-image">
+						<a href="<?php echo $block->escapeHtml($item->getLink()); ?>" title="<?php echo $block->escapeHtml($item->getTitle()); ?>">
+							<img src="<?php echo $imageSrc; ?>" alt="<?php echo $block->escapeHtml($item->getTitle()); ?>"/>
+						</a>
+					</div>
+					<?php } ?>
+					<h5>
+						<a href="<?php echo $block->escapeHtml($item->getLink()); ?>">
+							<?php echo $block->escapeHtml($item->getTitle()); ?>
+						</a>
+					</h5>
+					<?php if($date_created = $item->getDateCreated()){ ?>
+					<div class="date">
+						<?php echo $date_created->format('d.m.Y H:m'); ?>
+					</div>
+					<?php } ?>
+					<?php if($author = $item->getAuthor()){ ?>
+					<div class="author">
+						<?php echo __("Author: ").$author['name']; ?>
+					</div>
+					<?php } ?>
+					<?php if($categories = $item->getCategories()){ ?>
+					<div class="categories">
+						<?php echo __("<span>Categories: </span>") ?>
+						<ul>
+						<?php foreach($categories as $cat){ ?>
+							<li><?php echo $cat['label']; ?></li>
+						<?php } ?>
+						</ul>
+					</div>
+					<?php } ?>
+					<?php if($comment_counts = $item->getCommentCount()){ ?>
+					<div class="comment_counts">
+						<?php echo __("Comments")." (".(int)$comment_counts.") "; ?>
+					</div>
+					<?php } ?>
+					<div class="summary">
+						<?php if($is_truncate): ?>
+						<a href="<?php echo $block->escapeHtml($item->getLink()); ?>">
+							<?php 
+								$description = $item->getDescription();
+								$description = $strip_html?strip_tags($description): $description;
+								echo $block->escapeHtml($this->helper("Ves\BaseWidget\Helper\Data")->truncateString($description, $max_chars, '...', $remainder, false)); ?>
+						</a>
+						<?php else : ?>
+							<?php echo $item->getDescription(); ?>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		<?php endforeach; ?>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+require(['jquery'],function($){
+            $(document).ready(function(){
+            	require([
+		            'jquery'
+		             <?php if($this->helper("Ves\All\Helper\Data")->getConfig("enable_owlcarousel")): ?>
+		            ,"Ves_All/lib/owl.carousel/owl.carousel.min"
+		            <?php endif; ?>
+		            ],function($){
+		                var widgetowlcarousel = jQuery('#feed-items-carousel-<?php echo $modid; ?>');
+		                    widgetowlcarousel.owlCarousel({
+		                        loop:<?php echo $loop == 1?'true':'false'; ?>,
+							    margin:<?php echo $margin_item?(int)$margin_item:'0'; ?>,
+							    nav:<?php echo $show_nav == 1?"true":"false" ?>,
+							    <?php if($show_nav): ?>
+		                        navText: ["<span class='fa fa-angle-left'></span>","<span class='fa fa-angle-right'></span>"],
+		                        <?php endif; ?>
+							    dots:<?php echo $dots?"true":"false" ?>,
+							    <?php if($single_item): ?>
+							    singleItem: true,
+							    responsive:{
+							        0:{
+							            items:1
+							        },
+							        600:{
+							            items:1
+							        },
+							        1000:{
+							            items:1
+							        }
+							    },
+							    <?php else: ?>
+							    responsive:{
+							        0:{
+							            items:1
+							        },
+							        600:{
+							            items:3
+							        },
+							        1000:{
+							            items:5
+							        }
+							    },
+							    <?php endif; ?>
+		                        autoplay: <?php echo $auto_play_mode?'true':'false';?>,
+		                        <?php if ($autoSpeed): ?>
+		                        autoplaySpeed: <?php echo $autoSpeed; ?>,
+		                        <?php endif; ?>
+		                        autoplayTimeout: <?php echo (int)$autoplay_timeout ?>,
+		                        autoplayHoverPause: <?php echo $autoplay_hover?"true":"false" ?>
+		                    }); 
+		            });
+            });
+        });
+</script>
+<?php if($enable_collapse): ?>
+<script type="text/javascript">
+require(['jquery'],function($){
+    $(document).ready(function(){
+      require([
+            'jquery'
+            <?php if($this->helper("Ves\All\Helper\Data")->getConfig("enable_bootstrap_js")): ?>
+            ,"Ves_All/lib/bootstrap/js/bootstrap.min"
+            <?php endif; ?>
+            ],function($){
+                  
+            });
+      });
+});
+</script>
+<?php endif; ?>
+<?php endif; ?>

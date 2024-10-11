@@ -1,0 +1,39 @@
+<?php
+$helper         = $this->helper('Ves\BaseWidget\Helper\Data');
+$icon           = $this->getConfig('icon');
+$button_title   = $this->getConfig('button_title');
+$href           = $this->getConfig('href');
+$href           = @trim($href);
+if($href){
+    if($helper->isSiteLink($href)){
+        $href = $block->getUrl($href);
+    }
+}
+$color_button = $this->getConfig('color_button');
+$size   = $this->getConfig('size');
+$is_outline       =  $this->getConfig('is_outline');
+$is_active           = $this->getConfig('is_active');
+$extra_class       = $this->getConfig('extra_class');
+$content_html   = $this->getConfig('html');
+$content_html   = @str_replace(" ", "+", $content_html);
+$content_html   = base64_decode($content_html);
+$content_html   = $this->getDataFilterHelper()->filter($content_html);
+$button_class 	= 'btn';
+if($size){
+    $button_class .=' btn-'.$size;
+}
+if($is_outline){
+    $button_class .= ' btn-outline-'.$color_button;
+}else {
+    $button_class .= ' btn-'.$color_button;
+}
+if($is_active){
+    $button_class .= ' active';
+}
+$button_class .= ' '.$extra_class;
+?>
+<?php if($href): ?>
+    <a class="<?= $button_class; ?>" href="<?= $href; ?>" role="button" title="<?php echo $button_title;?>"<?php echo $content_html?(' '.$content_html):'';?>><?php if($icon): ?><i class="<?php echo $icon; ?>"></i>&nbsp;<?php endif; ?><?= $button_title; ?></a>
+<?php else: ?>
+    <button type="button" class="<?= $button_class; ?>" title="<?php echo $button_title;?>"<?php echo $content_html?(' '.$content_html):'';?>><?php if($icon): ?><i class="<?php echo $icon; ?>"></i>&nbsp;<?php endif; ?><?= $button_title; ?></button>
+<?php endif; ?>

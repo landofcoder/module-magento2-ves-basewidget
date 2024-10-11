@@ -1,6 +1,6 @@
-# module venustheme/module-basewidget require for Page Builder extension
+# module landofcoder/module-ves-basewidget require for Page Builder extension
 
 The module include there widgets for page builder
 
 ## Require Extensions
-- venustheme/module-all
+- landofcoder/module-ves-all
